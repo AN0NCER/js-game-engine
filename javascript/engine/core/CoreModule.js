@@ -1,3 +1,5 @@
+import { CoreRender } from "./CoreRendering.js";
+
 export class Vector2 {
     /**
      * @param {number} x 
@@ -245,5 +247,191 @@ export class Vector2 {
 
     valueOf() {
         return this.x * this.x + this.y * this.y;
+    }
+}
+
+export class Time {
+    static deltaTime = 0;
+    static fixedTime = 0;
+    static frameCount = 0;
+    static realtimeSinceStartup = 0;
+    static smoothDeltaTime = 0;
+    static time = 0;
+    static timeScale = 1;
+    static unscaledDeltaTime = 0;
+    static fixedDeltaTime = 0.2;
+
+    constructor() {
+        this.lastFrameTime = performance.now();
+        this.frameCount = 0;
+        this.startTime = performance.now();
+    }
+
+    Update() {
+        const currentTime = performance.now();
+        Time.unscaledDeltaTime = (currentTime - this.lastFrameTime) / 1000;
+        Time.deltaTime = Time.unscaledDeltaTime * Time.timeScale;
+        this.lastFrameTime = currentTime;
+
+        Time.smoothDeltaTime = Time.deltaTime.toFixed(0);
+        this.frameCount++;
+        Time.frameCount = this.frameCount;
+        Time.realtimeSinceStartup = this.startTime - currentTime;
+    }
+}
+
+export class Quaternion {
+    /**
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} w 
+     */
+    constructor(x = 0, y = 0, w = 0) {
+        this.eulerAngles = new Vector2();
+        this.x = x;
+        this.y = y;
+        this.w = w;
+    }
+
+    get normalized() {
+
+    }
+
+    /**
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} w 
+     */
+    Set(x, y, w) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+    }
+
+    SetFromToRotation() {
+
+    }
+
+    SetLookRotation() {
+
+    }
+
+    ToAngleAxis() {
+
+    }
+
+    ToString() {
+        return `(${this.x}, ${this.y}, ${this.w})`;
+    }
+}
+
+export class Rect {
+    static get zero() { return new Rect(0, 0, 0, 0) };
+    /**
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} width 
+     * @param {number} height 
+     */
+    constructor(x, y, width, height) {
+        this.center = new Vector2(width * 0.5 + x, height * 0.5 + y);
+        this.height = height;
+        this.max = new Vector2(width + x, height + y);
+        this.min = new Vector2(x, y);
+        this.position = new Vector2(x, y);
+        this.size = new Vector2(width, height);
+        this.width = width;
+        this.x = x;
+        this.xMax = width + x;
+        this.xMin = x;
+        this.y = y;
+        this.yMax = height + y;
+        this.yMin = y;
+        CoreRender.GameObjectUpdate.push(this);
+    }
+
+    /**
+     * @param {Vector2} point 
+     * @param {boolean} allowInverse 
+     */
+    Contains(point, allowInverse = false) {
+        if (!allowInverse) {
+            return (
+                point.x >= this.xMin &&
+                point.x < this.xMax &&
+                point.y >= this.yMin &&
+                point.y < this.yMax
+            );
+        } else {
+            return (
+                (this.width < 0
+                    ? point.x <= this.xMin && point.x > this.xMax
+                    : point.x >= this.xMin && point.x < this.xMax) &&
+                (this.height < 0
+                    ? point.y <= this.yMin && point.y > this.yMax
+                    : point.y >= this.yMin && point.y < this.yMax)
+            );
+        }
+    }
+    /**
+     * @param {Rect} other 
+     * @param {boolean} allowInverse 
+     */
+    Overlaps(other, allowInverse = false) {
+        if (!allowInverse) {
+            return (
+                this.x < other.x + other.width &&
+                this.x + this.width > other.x &&
+                this.y < other.y + other.height &&
+                this.y + this.height > other.y
+            );
+        } else {
+            return (
+                (this.width < 0
+                    ? this.x <= other.x && this.x + this.width > other.x + other.width
+                    : this.x >= other.x && this.x < other.x + other.width) &&
+                (this.height < 0
+                    ? this.y <= other.y && this.y + this.height > other.y + other.height
+                    : this.y >= other.y && this.y < other.y + other.height)
+            );
+        }
+    }
+
+    /**
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} width 
+     * @param {number} height 
+     */
+    Set(x, y, width, height) {
+        this.center = new Vector2(width * 0.5 + x, height * 0.5 + y);
+        this.height = height;
+        this.max = new Vector2(width + x, height + y);
+        this.min = new Vector2(x, y);
+        this.position = new Vector2(x, y);
+        this.size = new Vector2(width, height);
+        this.width = width;
+        this.x = x;
+        this.xMax = width + x;
+        this.xMin = x;
+        this.y = y;
+        this.yMax = height + y;
+        this.yMin = y;
+    }
+
+    ToString() {
+        return `Rect (${this.x.toFixed(2)}, ${this.y.toFixed(2)}, ${this.width.toFixed(2)}, ${this.height.toFixed(2)})`;
+    }
+
+    update() {
+        this.center.Set(this.width * 0.5 + this.x, this.height * 0.5 + this.y);
+        this.xMax = this.width + this.x;
+        this.xMin = this.x;
+        this.yMax = this.height + this.y;
+        this.yMin = this.y;
+        this.max.Set(this.xMax, this.yMax);
+        this.min.Set(this.xMin, this.yMin);
+        this.position.Set(this.x, this.y);
+        this.size.Set(this.width, this.height);
     }
 }
