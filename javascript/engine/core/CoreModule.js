@@ -327,6 +327,27 @@ export class Quaternion {
 
 export class Rect {
     static get zero() { return new Rect(0, 0, 0, 0) };
+
+    #xMax = 0;
+
+    get xMax() { return this.#xMax; }
+    set xMax(xMax) { this.#xMax = xMax; }
+
+    #xMin = 0;
+
+    get xMin() { return this.#xMin; }
+    set xMin(xMin) { this.#xMin = xMin; }
+
+    #yMax = 0;
+
+    get yMax() { return this.#yMax; }
+    set yMax(yMax) { this.#yMax = yMax; }
+
+    #yMin = 0;
+
+    get yMin() { return this.#yMin; }
+    set yMin(yMin) { this.#yMin = yMin; }
+
     /**
      * @param {number} x 
      * @param {number} y 
@@ -347,7 +368,7 @@ export class Rect {
         this.y = y;
         this.yMax = height + y;
         this.yMin = y;
-        CoreRender.GameObjectUpdate.push(this);
+        CoreRender.GameShapes.push(this);
     }
 
     /**

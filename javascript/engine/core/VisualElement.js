@@ -1,3 +1,4 @@
+import { Collider } from "./Colliders.js";
 import { GameObject } from "./GameObject.js";
 
 export class Layer {
@@ -11,6 +12,8 @@ export class Layer {
         this.show = true;
         /**@type {[GameObject]} */
         this.gameObjects = [];
+        /**@type {[Collider]} */
+        this.colliderObjects = [];
     }
 
     /**
@@ -46,7 +49,7 @@ export class Layer {
     /**
      * @param {GameObject} gameObject 
      */
-    addGameObject(gameObject){
+    addGameObject(gameObject) {
         this.gameObjects.push(gameObject);
     }
 }
@@ -132,6 +135,34 @@ export class Layers {
             result = Layers.matrix[indexA][Layers.layers.length - indexB - 1];
         } else {
             result = Layers.matrix[indexB][Layers.layers.length - indexA - 1];
+        }
+        return result;
+    }
+
+    /**
+     * @param {Layer} a 
+     * @param {Layer} b 
+     */
+    static DisableLayerMatrix(a, b) {
+        let layerA = a;
+        let layerB = b;
+        if (typeof (a) === 'string') {
+            layerA = Layers.GetLayer(a);
+        }
+        if (typeof (b) === 'string') {
+            layerB = Layers.GetLayer(b);
+        }
+
+        let result = 0;
+
+        if (layerA === undefined || layerB === undefined) return result;
+
+        const indexA = Layers.layers.indexOf(layerA);
+        const indexB = Layers.layers.indexOf(layerB);
+        if (indexA < indexB) {
+            Layers.matrix[indexA][Layers.layers.length - indexB - 1] = 0;
+        } else {
+            Layers.matrix[indexB][Layers.layers.length - indexA - 1] = 0;
         }
         return result;
     }

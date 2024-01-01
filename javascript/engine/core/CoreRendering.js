@@ -1,10 +1,10 @@
 import { Engine } from "../engine.js";
+import { Collider } from "./Colliders.js";
 import { Time } from "./CoreModule.js";
 import { Layers } from "./VisualElement.js";
 
 export class CoreRender {
-    static GameObjectUpdate = [];
-    static GameObjectRender = [];
+    static GameShapes = [];
     /**
      * @param {Engine} engine 
      */
@@ -22,29 +22,22 @@ export class CoreRender {
             if (elapsedTime >= this.interval / Time.timeScale) {
                 this.time.Update();
 
-                let GameObjects = [];
                 //Rendering
                 Layers.layers.forEach((val) => {
                     val.update();
-                    GameObjects = [...GameObjects, ...val.gameObjects];
                 });
 
-                CoreRender.GameObjectUpdate.forEach((val) => {
-                    val.update();
+                CoreRender.GameShapes.forEach((shape) => {
+                    shape.update();
+                });
+
+                Collider.GameColliders.forEach((collider) => {
+                    collider.UpdateCollider(collider);
                 })
-
-                GameObjects = [...GameObjects, ...CoreRender.GameObjectUpdate];
-
-                console.log(GameObjects);
-                Time.timeScale = 0.0;
 
                 Layers.layers.forEach((val) => {
                     val.draw(val.context);
-                })
-
-                CoreRender.GameObjectRender.forEach((val) => {
-                    // val.draw();
-                })
+                });
 
                 lastTime = timeStamp - (elapsedTime % this.interval);
             }
