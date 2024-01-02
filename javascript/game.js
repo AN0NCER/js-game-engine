@@ -1,4 +1,4 @@
-import { BoxCollider, CircleCollider } from "./engine/core/Colliders.js";
+import { BoxCollider, CircleCollider } from "./engine/physics/Colliders.js";
 import { Rect, Time, Vector2 } from "./engine/core/CoreModule.js";
 import { GameObject } from "./engine/core/GameObject.js";
 import { Layer, Layers } from "./engine/core/VisualElement.js";

@@ -1,7 +1,7 @@
 import { Box } from "../../game.js";
-import { Time, Vector2 } from "./CoreModule.js";
-import { GameObject } from "./GameObject.js";
-import { Layers } from "./VisualElement.js";
+import { Time, Vector2 } from "../core/CoreModule.js";
+import { GameObject } from "../core/GameObject.js";
+import { Layers } from "../core/VisualElement.js";
 
 export class TypeCollider {
     static get Circle() {

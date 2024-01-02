@@ -1,5 +1,5 @@
 import { Engine } from "../engine.js";
-import { Collider } from "./Colliders.js";
+import { Collider } from "../physics/Colliders.js";
 import { Time } from "./CoreModule.js";
 import { Layers } from "./VisualElement.js";
 

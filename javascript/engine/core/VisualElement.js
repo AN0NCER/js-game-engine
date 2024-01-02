@@ -1,4 +1,4 @@
-import { Collider } from "./Colliders.js";
+import { Collider } from "../physics/Colliders.js";
 import { GameObject } from "./GameObject.js";
 
 export class Layer {
